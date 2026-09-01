@@ -31,10 +31,8 @@ import {
 
 export const navItems = [
   { label: "Home", href: "/" },
-  { label: "Courses", href: "/courses" },
-  { label: "Programs", href: "/programs" },
   { label: "Projects", href: "/projects" },
-  { label: "Why Tevexxo", href: "/#why-tevexxo" },
+  { label: "Why Tevexxo", href: "/why-tevexxo" },
   { label: "About Us", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
