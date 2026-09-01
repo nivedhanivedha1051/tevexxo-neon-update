@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ProgramsRouteImport } from './routes/programs'
+import { Route as WhyTevexxoRouteImport } from './routes/why-tevexxo'
 import { Route as CoursesIndexRouteImport } from './routes/courses/index'
 import { Route as CoursesSlugRouteImport } from './routes/courses/$slug'
 import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
@@ -36,6 +37,11 @@ const ContactRoute = ContactRouteImport.update({
 const ProgramsRoute = ProgramsRouteImport.update({
   id: '/programs',
   path: '/programs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WhyTevexxoRoute = WhyTevexxoRouteImport.update({
+  id: '/why-tevexxo',
+  path: '/why-tevexxo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/programs': typeof ProgramsRoute
+  '/why-tevexxo': typeof WhyTevexxoRoute
   '/courses/$slug': typeof CoursesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/courses/': typeof CoursesIndexRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/programs': typeof ProgramsRoute
+  '/why-tevexxo': typeof WhyTevexxoRoute
   '/courses/$slug': typeof CoursesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/courses': typeof CoursesIndexRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/programs': typeof ProgramsRoute
+  '/why-tevexxo': typeof WhyTevexxoRoute
   '/courses/$slug': typeof CoursesSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/courses/': typeof CoursesIndexRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/programs'
+    | '/why-tevexxo'
     | '/courses/$slug'
     | '/projects/$slug'
     | '/courses/'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/programs'
+    | '/why-tevexxo'
     | '/courses/$slug'
     | '/projects/$slug'
     | '/courses'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/programs'
+    | '/why-tevexxo'
     | '/courses/$slug'
     | '/projects/$slug'
     | '/courses/'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   ProgramsRoute: typeof ProgramsRoute
+  WhyTevexxoRoute: typeof WhyTevexxoRoute
   CoursesSlugRoute: typeof CoursesSlugRoute
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/programs'
       fullPath: '/programs'
       preLoaderRoute: typeof ProgramsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/why-tevexxo': {
+      id: '/why-tevexxo'
+      path: '/why-tevexxo'
+      fullPath: '/why-tevexxo'
+      preLoaderRoute: typeof WhyTevexxoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   ProgramsRoute: ProgramsRoute,
+  WhyTevexxoRoute: WhyTevexxoRoute,
   CoursesSlugRoute: CoursesSlugRoute,
   ProjectsSlugRoute: ProjectsSlugRoute,
   CoursesIndexRoute: CoursesIndexRoute,

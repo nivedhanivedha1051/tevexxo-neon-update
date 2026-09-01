@@ -12,8 +12,8 @@ import {
   Linkedin,
   Mail,
   MapPin,
+  Newspaper,
   Phone,
-  Star,
   Users,
   Youtube,
 } from "lucide-react";
@@ -22,14 +22,12 @@ import {
   features,
   toCourseView,
   toProjectView,
-  toTestimonialView,
   type CourseView,
   type ProjectView,
 } from "@/lib/tevexxo-data";
 import {
   useCourses,
   useProjects,
-  useTestimonials,
   usePublicSettings,
   useCreateInquiry,
 } from "@/hooks/useTevexxoApi";
@@ -436,21 +434,21 @@ function ProjectCard({ project }: { project: ProjectView }) {
 }
 
 function Projects() {
-  const query = useProjects();
-  const projects = (query.data ?? []).map(toProjectView);
+  const query = useCourses();
+  const courses = (query.data ?? []).map((course, index) => toCourseView(course, index));
   return (
     <section id="projects" className="section-space bg-white">
       <div className="container">
         <SectionHeading
-          eyebrow="REAL WORLD PROJECTS"
-          title="Build. Showcase."
-          accent="Get Hired."
+          eyebrow="OUR COURSES"
+          title="Explore Our"
+          accent="Top Courses"
           action={
             <AppLink
-              href="/projects"
+              href="/courses"
               className="hidden items-center gap-2 text-xs font-bold text-slate-600 sm:flex"
             >
-              View All Projects <ArrowRight size={14} />
+              View All Courses <ArrowRight size={14} />
             </AppLink>
           }
         />
@@ -458,15 +456,15 @@ function Projects() {
           <SectionSkeleton count={3} tall />
         ) : query.isError ? (
           <SectionError
-            message="We couldn't load projects right now."
+            message="We couldn't load courses right now."
             onRetry={() => void query.refetch()}
           />
-        ) : projects.length === 0 ? (
-          <SectionEmpty message="Learner projects will appear here soon." />
+        ) : courses.length === 0 ? (
+          <SectionEmpty message="New courses are being prepared. Check back soon." />
         ) : (
           <motion.div {...sectionMotion} className="grid gap-5 lg:grid-cols-3">
-            {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+            {courses.slice(0, 3).map((course) => (
+              <CourseCard key={course.id} course={course} />
             ))}
           </motion.div>
         )}
@@ -510,87 +508,62 @@ function WhyTevexxo() {
   );
 }
 
-function Testimonials() {
-  const query = useTestimonials();
-  const testimonials = (query.data ?? []).map(toTestimonialView);
-  const [active, setActive] = useState(0);
-  const pageSize = 3;
-  const maxStart = Math.max(0, testimonials.length - pageSize);
-  const safeActive = Math.min(active, maxStart);
-  const visible = testimonials.slice(safeActive, safeActive + pageSize);
+function Blogs() {
+  const blogs = [
+    {
+      title: "The skills shaping the next wave of tech careers",
+      category: "CAREER GROWTH",
+      description: "A practical look at the habits and tools that help learners build momentum.",
+    },
+    {
+      title: "From first principles to your first shipped project",
+      category: "LEARNING",
+      description: "How hands-on practice turns a learning path into work you can show.",
+    },
+    {
+      title: "Inside the technologies teams are building with",
+      category: "TECHNOLOGY",
+      description: "Clear signals from the industry to guide your next learning decision.",
+    },
+  ];
   return (
     <section className="bg-white py-14">
       <div className="container">
         <SectionHeading
-          eyebrow="WHAT OUR LEARNERS SAY"
-          title="Real stories from"
-          accent="real learners."
+          eyebrow="FROM THE TEVEXXO JOURNAL"
+          title="Ideas for your"
+          accent="next move."
           action={
-            testimonials.length > pageSize ? (
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setActive(Math.max(0, safeActive - 1))}
-                  className="carousel-button"
-                  aria-label="Previous testimonial"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <button
-                  onClick={() => setActive(Math.min(maxStart, safeActive + 1))}
-                  className="carousel-button"
-                  aria-label="Next testimonial"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-            ) : undefined
+            <span className="hidden items-center gap-2 text-xs font-bold text-slate-600 sm:flex">
+              View All Blogs <ArrowRight size={14} />
+            </span>
           }
         />
-        {query.isPending ? (
-          <SectionSkeleton count={3} />
-        ) : query.isError ? (
-          <SectionError
-            message="We couldn't load testimonials right now."
-            onRetry={() => void query.refetch()}
-          />
-        ) : visible.length === 0 ? (
-          <SectionEmpty message="Learner stories will appear here soon." />
-        ) : (
-          <motion.div layout className="grid gap-4 md:grid-cols-3">
-            {visible.map((testimonial) => (
-              <motion.article
-                layout
-                key={testimonial.id}
-                className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm"
-              >
-                <div className="mb-4 text-3xl font-black leading-none text-orange-500">&ldquo;</div>
-                {testimonial.quote && (
-                  <p className="min-h-[60px] text-xs leading-5 text-slate-600">
-                    {testimonial.quote}
-                  </p>
-                )}
-                <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
-                  <div className="flex items-center gap-3">
-                    <span className="avatar-ring small">{testimonial.avatar}</span>
-                    <div>
-                      <p className="text-xs font-black text-slate-950">{testimonial.name}</p>
-                      <p className="text-[10px] text-slate-400">{testimonial.role}</p>
-                    </div>
-                  </div>
-                  <div className="flex text-orange-500">
-                    {[1, 2, 3, 4, 5].map((star) =>
-                      star <= testimonial.rating ? (
-                        <Star key={star} size={12} fill="currentColor" />
-                      ) : (
-                        <Star key={star} size={12} />
-                      ),
-                    )}
-                  </div>
+        <motion.div {...sectionMotion} className="grid gap-4 md:grid-cols-3">
+          {blogs.map((blog) => (
+            <motion.article
+              variants={reveal}
+              whileHover={{ y: -6 }}
+              key={blog.title}
+              className="course-card group rounded-2xl border bg-white p-5 shadow-sm"
+            >
+              <div className="mb-6 flex items-center justify-between">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-500">
+                  <Newspaper size={22} />
                 </div>
-              </motion.article>
-            ))}
-          </motion.div>
-        )}
+                <span className="text-[9px] font-black tracking-wider text-orange-500">{blog.category}</span>
+              </div>
+              <h3 className="text-lg font-black leading-tight text-slate-950">{blog.title}</h3>
+              <p className="mt-2 text-xs leading-5 text-slate-500">{blog.description}</p>
+              <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 text-xs font-bold">
+                <span className="text-slate-500">Read article</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-orange-500 transition-colors group-hover:border-orange-500 group-hover:bg-orange-500 group-hover:text-white">
+                  <ArrowRight size={15} />
+                </span>
+              </div>
+            </motion.article>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
@@ -676,27 +649,6 @@ function CTA() {
 
 const footerLinks: { title: string; links: { label: string; href: string }[] }[] = [
   {
-    title: "COURSES",
-    links: [
-      { label: "Full Stack Development", href: "/courses" },
-      { label: "AI & Machine Learning", href: "/courses" },
-      { label: "Data Analytics", href: "/courses" },
-      { label: "Cyber Security", href: "/courses" },
-      { label: "Cloud & DevOps", href: "/courses" },
-      { label: "UI/UX Design", href: "/courses" },
-    ],
-  },
-  {
-    title: "PROGRAMS",
-    links: [
-      { label: "Certification Programs", href: "/programs" },
-      { label: "Industry Projects", href: "/projects" },
-      { label: "Internships", href: "/programs" },
-      { label: "Workshops", href: "/programs" },
-      { label: "Career Support", href: "/contact" },
-    ],
-  },
-  {
     title: "COMPANY",
     links: [
       { label: "About Us", href: "/about" },
@@ -722,7 +674,7 @@ function Footer() {
   const siteEmail = settings.data?.siteEmail || "hello@tevexxo.com";
   return (
     <footer className="bg-slate-950 text-slate-400">
-      <div className="container grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(4,1fr)]">
+      <div className="container grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(3,1fr)]">
         <div>
           <AppLink
             href="/"
@@ -796,7 +748,7 @@ export default function TevexxoPage() {
         <Projects />
         <Courses />
         <WhyTevexxo />
-        <Testimonials />
+        <Blogs />
         <CTA />
       </main>
       <Footer />
